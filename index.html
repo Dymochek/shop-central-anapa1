@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Моё приложение Insert Select Update Delete</h1>
+    <hr>
+    Имя: <br> <input type="text" id="namebox"><br>
+    Возраст: <br> <input type="text" id="agebox"><br>
+    Номер группы: <br> <input type="text" id="numberbox"><br>
+    Пол: <br> <input type="text" id="sexbox"><br>
+    <hr>
+    <button id="insert">Добавить в БД</button><br>
+    <button id="select">Выбрать из БД</button><br>
+    <button id="update">Обновить</button><br>
+    <button id="delete">Удалить из БД</button><br>
+    <button id="be">be</button>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-database.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyBhJcSYwHKQ9sExi6PmZUMgQiukrwi6Iic",
+            authDomain: "shop-central-anapa1.firebaseapp.com",
+            databaseURL: "https://shop-central-anapa1.firebaseio.com",
+            projectId: "shop-central-anapa1",
+            storageBucket: "shop-central-anapa1.appspot.com",
+            messagingSenderId: "175714398257",
+            appId: "1:175714398257:web:4ab08ef61f95c9c294a510"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        var nameV, ageV, numberV, sexV;
+        function Ready(){
+            nameV = document.getElementById('namebox').value;
+            ageV = document.getElementById('agebox').value;
+            numberV = document.getElementById('numberbox').value;
+            sexV = document.getElementById('sexbox').value;
+        } 
+        function AntyReady(){
+            document.getElementById('namebox').value = '';
+            document.getElementById('agebox').value = '';
+            document.getElementById('numberbox').value = '';
+            document.getElementById('sexbox').value = '';
+        }
+        //----------------insert-----------------------
+        document.getElementById('insert').onclick = function(){
+            Ready();
+            firebase.database().ref('users/'+numberV).set({
+                Number: numberV,
+                Age: ageV,
+                Name: nameV,
+                Sex: sexV
+            });
+            console.log('Данные добавлены в БД');
+        }
+        //----------------select-----------------------
+        document.getElementById('select').onclick = function(){
+            Ready();
+            firebase.database().ref('users/'+numberV).on('value', function(snapshot){
+                document.getElementById('namebox').value = snapshot.val().Name;
+                document.getElementById('sexbox').value = snapshot.val().Sex;
+                document.getElementById('agebox').value = snapshot.val().Age;
+            });
+            console.log('Достал данные');
+        }
+        //----------------update-----------------------
+        document.getElementById('update').onclick = function(){
+            Ready();
+            firebase.database().ref('users/'+numberV).update({
+                Age: ageV,
+                Name: nameV,
+                Sex: sexV
+            });
+            console.log('Данные обновлены');
+        }
+        //----------------delete-----------------------
+        document.getElementById('delete').onclick = function(){
+            Ready();
+            firebase.database().ref('users/'+numberV).remove();
+            console.log('Номер '+numberV+' удалён из БД');
+        }
+        document.getElementById('be').onclick = function(){
+            Ready();
+            firebase.database().ref('users/'+numberV).set();
+            AntyReady();
+        }
+
+    </script>
+</body>
+</html>
